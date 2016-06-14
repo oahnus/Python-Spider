@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib2
-import urllib
 import re
-import tool
 import os
 import time
 
@@ -13,7 +11,6 @@ class Spider:
     def __init__(self):
         self.siteURL = ''
         self.originURL = ''
-        self.tool = tool.Tool()
 
     # 获取花瓣网画板页面代码
     def getBoardPage(self):
