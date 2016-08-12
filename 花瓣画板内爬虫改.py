@@ -135,8 +135,7 @@ class Spider:
 # 创建爬虫实例
 spider = Spider()
 # 获取输入的画板url
-# url = raw_input("board url:")
-url = "http://huaban.com/boards/30445176/"
+url = raw_input("board url:")
 spider.originURL = url
 
 # 执行保存画板方法
