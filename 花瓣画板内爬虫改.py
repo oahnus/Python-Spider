@@ -3,7 +3,6 @@
 import urllib2
 import re
 import os
-import time
 
 
 class Spider:
@@ -16,7 +15,7 @@ class Spider:
     def getBoardPage(self):
         # url = self.siteURL
         try:
-            request = urllib2.Request(url)
+            request = urllib2.Request(self.siteURL)
             response = urllib2.urlopen(request)
         except urllib2.HTTPError, e:
             if e.code == 404:
@@ -95,46 +94,51 @@ class Spider:
         # 新建目录
         self.mkdir(name)
 
-        # 设置画板的url
-        self.siteURL = url
-        # 获取画板的html
-        board = self.getBoardPage()
-        # 提取画板页面中的图片id
-        ids = self.getImgID(board)
+        while(1):
+            # 设置画板的url
+            self.siteURL = url
+            # 获取画板的html
+            board = self.getBoardPage()
+            # 提取画板页面中的图片id
+            ids = self.getImgID(board)
 
-        # 如果列表为空 返回
-        if len(ids) == 0:
-            return
+            # 如果列表为空 返回
+            if len(ids) == 0:
+                return
 
-        # 存储图片
-        for index in ids:
-            try:
-                # ids中的id存在其他字符，获取子串来提取出index
-                index = index[14:-1]
-                print index
-                # 获取图片的资源页面
-                imgpage = self.getImgPage(index)
-                # 提取图片的url地址
-                img = self.getImg(imgpage)
-                if not img == '':
-                    # 保存图片
-                    self.saveImg(img, index + '.jpg')
-                    # print img
-            except Exception:
-                # 如果中间出现错误，跳过此图片，继续从下个图片地址下载存储图片
-                continue
-        # 最后一个图片的ID
-        lastImg = ids[-1][14:-1]
-        # 花瓣网的画板内有下拉加载，下拉加载的请求url为下面url格式，
-        # 通过将刷新前的最后一张图片id加入请求中，就可获取新的图片列表
-        url = self.originURL + '?limit=40&max=' + str(lastImg) + '&wfl=1'
-        print url
+            # 存储图片
+            for index in ids:
+                try:
+                    # ids中的id存在其他字符，获取子串来提取出index
+                    index = index[14:-1]
+                    print index
+                    # 获取图片的资源页面
+                    imgpage = self.getImgPage(index)
+                    # 提取图片的url地址
+                    img = self.getImg(imgpage)
+                    if not img == '':
+                        # 保存图片
+                        self.saveImg(img, index + '.jpg')
+                        # print img
+                except Exception:
+                    # 如果中间出现错误，跳过此图片，继续从下个图片地址下载存储图片
+                    continue
+            # 最后一个图片的ID
+            lastImg = ids[-1][14:-1]
+            # 花瓣网的画板内有下拉加载，下拉加载的请求url为下面url格式，
+            # 通过将刷新前的最后一张图片id加入请求中，就可获取新的图片列表
+            url = self.originURL + '?irr486cj&max=' + str(lastImg) + '&limit=20&wfl=1'
+            # curl "http://huaban.com/boards/30445176/?irr486cj&max=805536368&limit=20&wfl=1"
+            print url
+    
 
 # 创建爬虫实例
 spider = Spider()
 # 获取输入的画板url
-url = raw_input("board url:")
+# url = raw_input("board url:")
+url = "http://huaban.com/boards/30445176/"
 spider.originURL = url
+
 # 执行保存画板方法
 spider.saveBoard(url)
 # 结束
